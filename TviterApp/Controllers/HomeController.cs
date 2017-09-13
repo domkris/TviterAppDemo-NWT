@@ -51,6 +51,7 @@ namespace TviterApp.Controllers
             
 
         }
+
         public JsonResult GetUserImage(string userName)
         {
             ApplicationUser user = db.Users.Where(a => a.UserName == userName).SingleOrDefault();
