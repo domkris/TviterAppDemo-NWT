@@ -1,4 +1,4 @@
 # TviterAppNWT
 work in progress
-[[https://github.com/username/repository/blob/master/img/octocat.png|alt=octocat]]
+[[https://github.com/domkris/files/blob/master/Screenshot%20(70).png?raw=true]]
 
