@@ -1,0 +1,198 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+ }
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+
+<div class="jumbotron" style="background-image: url('/Image/sky.jpg')"ng-controller="HomeController">
+
+    <div class="container">
+        <h1 style="color:white">Hello {{user.CustomUsername}}!</h1>
+        <div class="row">
+            <div class="col-sm-2">
+                <h1>
+                    <img src="~/UploadedFiles/{{user.imagePath}}" style="width:160px;height:160px; background: #FFFFFF;
+                        margin: auto;
+                        -moz-border-radius: 60px;
+                        border-radius: 100px;
+                        padding: 6px;
+                        box-shadow: 0px 0px 20px #888;" />
+                </h1> 
+               
+               
+            </div>
+            <div class="col-sm-10">
+                <br />
+                <br />
+               
+                <br /> 
+                {{user.Email}}
+                <br />
+                <strong>{{user.UserDescription}}</strong>
+                <br />
+                <br />
+                <span>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Edit profile</button>
+                </span>   
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Profile</h4>
+                    <div class="container" ng-controller="FileController">
+                        <form  novalidate name="f1" ng-submit="SaveFiles()">
+                            <div class="form-group">
+                                <div style="color:red">{{Message}}</div>
+                                <table>
+                                    <tr>
+                                        <td>Odaberi sliku </td>
+                                        <td>
+                                            <input type="file" accept="image/*" onchange="angular.element(this).scope().selectFileForUpload(this.files)" required />
+                                            <span ng-show="(f1.file.$dirty || IsFormSubmitted) && f1.file.$error.required">Slika nije odabrana!</span>
+                                            <span>{{FileInvalidMessage}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Opis:</td>
+                                        <td><input type="text" name="uFileDescription" ng-model="FileDescription" class="{{(IsFormSubmitted?'ng-dirty'+(f1.uFileDescription.$invalid?'ng-invalid':''):'')}}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td><input type="submit" value="Spremi sliku" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="modal-body">
+                    <table class="table">
+        
+                        <tbody>
+                            <tr>
+                                <td>New Email</td>
+                                <td><input type="text" ng-model="model.Email "placeholder="{{user.Email}}"/></td>
+                            </tr>
+                            <tr>
+                                <td>Custom name</td>
+                                <td><input type="text" ng-model="model.CustomUsername " placeholder="{{user.CustomUsername}}" /></td>
+                            </tr>
+                            <tr>
+                                
+                                <td>User Description</td>
+                                <td><textarea class='form-control' ng-model="model.UserDescription" maxlength="150" placeholder="{{user.UserDescription}}"></textarea></td>
+                            </tr>
+                            
+                            <tr>
+                                <td><button type="button" class="btn btn-danger" ng-click="deleteUser()">Izbrisi profil</button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editUser()">Spremi</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-8 col-md-8" ng-controller="PostController">
+        <div class="thumbnail">
+            <div class="caption">
+                <h3>Timeline</h3>
+                <div class="input-group">
+                    <form name="inputPost" ng-submit="addPost()">
+                        
+                        <!--input type="hidden" ng-model="post.UserId" class="form-control" value ="" required /-->
+                        <!--input type="search" ng-model="post.PostDescription" class="form-control" maxlength="150" placeholder="Laprdni svoj tvit..." name="text" style="word-break:break-word" required /-->
+                        <textarea class='form-control' ng-model="post.PostDescription" maxlength="150" required></textarea>
+                        </br>
+                        <button type="submit" class="btn btn-primary">Tvitaj</button>
+                    </form>
+                    
+                </div><!-- /input-group -->
+                </br>
+                </br>
+                </br>
+                
+                <div ng-repeat="item in allPosts2  |  orderBy:'CreatedAt':true" track by $index >
+                    <div class="panel panel-primary">
+                        
+                        <div class="panel-heading" ng-init="userName=item.ApplicationUserName">
+                            
+                            <span ng-controller="ImageController">
+                                <img src="~/UploadedFiles/{{image}}" style="width:40px;height:40px; background: #FFFFFF;
+                            margin: auto;
+                            -moz-border-radius: 1px;
+                            border-radius: 100px;
+                            padding: 1px;
+                            box-shadow: 0px 0px 20px #888;" />
+                            </span>
+                            
+                             by {{item.ApplicationUserName}}, {{item.CreatedAt | mydate | date: 'yyyy-MM-dd HH:mm'}}h
+                       
+                        </div>
+                        <div class="panel-body" ng-show="item.ApplicationUserName == '@User.Identity.Name'">
+                            <div ng-show="editMode">
+                                <textarea class='form-control' ng-model="item.PostDescription" maxlength="150" required></textarea>
+                                <button class="btn btn-primary" ng-click="save(item.Id, item.PostDescription); editMode = false">Spremi</button>
+                                <button class="btn btn-default" ng-click="editPost(); editMode = false">Ponisti</button>.
+                            </div>
+                            <div ng-hide="editMode">
+                                <span>{{item.PostDescription}}</span>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-show="item.ApplicationUserName != '@User.Identity.Name'">
+                            <span>{{item.PostDescription}}</span>
+                        </div>
+                       
+                        <div class="panel-footer">
+                            <div ng-show="item.ApplicationUserName == '@User.Identity.Name'">
+                                <button class="btn btn-primary" ng-click="editPost(item); editMode = true" ng-hide="editMode">Edit Post</button>
+                                <button ng-click="deletePost(item.Id)" class="btn btn-danger">Delete Post</button>
+                            </div>
+                            <div ng-show="item.ApplicationUserName != '@User.Identity.Name'">
+                                <button class="btn btn-primary" ng-click="likePost(item.Id)">Like <span class="badge">{{item.numOfLikes}}</span> </button>
+                                <button class="btn btn-danger" ng-click="bljakPost(item.Id)">Bljak <span class="badge">{{item.numOfBljaks}}</span> </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </div>
+                
+
+            
+                </div>
+            </div>
+        </div>
+    <div class="col-sm-4 col-md-4" ng-controller="HomeController">
+        <div class="thumbnail">
+            <div class="caption">
+                <h3>Prijatelji</h3>
+                <ul ng-repeat="follower in followers">
+                    <li><a href="~/search/OtherUser?otherUserName={{follower.OtherUserId}}">{{follower.OtherUserId}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

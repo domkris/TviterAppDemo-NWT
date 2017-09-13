@@ -1,0 +1,33 @@
+﻿<div class="panel-heading" ng-init="userName=item.ApplicationUserName">
+    <span ng-controller="ImageController">
+        <img src="~/UploadedFiles/{{image}}" style="width:40px;height:40px; background: #FFFFFF;
+                                margin: auto;
+                                -moz-border-radius: 1px;
+                                border-radius: 100px;
+                                padding: 1px;
+                                box-shadow: 0px 0px 20px #888;" />
+    </span>
+    by {{item.ApplicationUserName}}, {{item.CreatedAt | mydate | date: 'yyyy-MM-dd HH:mm'}}h
+
+</div>
+<div ng-hide="editorEnabled" class="panel-body">
+    {{item.PostDescription}}
+
+</div>
+<div ng-show="editorEnabled">
+
+    <input ng-model="item.newValue" ng-show="editorEnabled" maxlength="150" required>
+    <a href="#" ng-click="save(item.Id, item.newValue)">Spremi</a>
+    or
+    <a href="#" ng-click="editPost()">Ponisti</a>.
+</div>
+<div class="panel-footer">
+    <div ng-show="item.ApplicationUserName == '@User.Identity.Name'">
+        <button class="btn btn-primary" ng-click="editPost()">Edit Post</button>
+        <button ng-click="deletePost(item.Id)" class="btn btn-danger">Delete Post</button>
+    </div>
+    <div ng-show="item.ApplicationUserName != '@User.Identity.Name'">
+        <button class="btn btn-primary" ng-click="likePost(item.Id)">Like <span class="badge">{{item.numOfLikes}}</span> </button>
+        <button class="btn btn-danger" ng-click="bljakPost(item.Id)">Bljak <span class="badge">{{item.numOfBljaks}}</span> </button>
+    </div>
+</div>

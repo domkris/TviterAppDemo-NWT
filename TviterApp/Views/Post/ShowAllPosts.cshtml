@@ -1,0 +1,31 @@
+﻿@model IEnumerable<TviterApp.Models.Post>
+@{
+    ViewBag.Title = "ShowAllPosts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ShowAllPosts</h2>
+
+<table>
+    <tr>
+       
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+          
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.PostDescription)
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    }

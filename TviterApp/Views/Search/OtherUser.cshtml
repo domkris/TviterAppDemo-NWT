@@ -1,0 +1,106 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+
+<body ng-controller="OtherUserController">
+    <div class="jumbotron" style="background-image: url('/Image/sky.jpg')" ng-controller="OtherUserController">
+        <div class="container">
+            <h1  style="color:white">Gledate {{user.CustomUsername || user.Email}} !</h1>
+            
+            
+            <div class="row">
+                <div class="col-sm-2">
+                    <h1>
+                        <img src="~/UploadedFiles/{{image}}" style="width:160px;height:160px; background: #FFFFFF;
+                        margin: auto;
+                        -moz-border-radius: 60px;
+                        border-radius: 100px;
+                        padding: 6px;
+                        box-shadow: 0px 0px 20px #888;" />
+                    </h1>
+
+
+                </div>
+                <div class="col-sm-10">
+                    <br />
+                    <br />
+
+                    <br />
+                    {{user.Email}}
+                    <br />
+                    <strong>{{user.UserDescription}}</strong>
+                    <br />
+                    <br />
+                    <span>
+                        <button class="btn btn-primary" ng-click="follow(otherUser); follow = true" ng-hide="follow">Prati</button>
+                        <button class="btn btn-danger" ng-click="follow(otherUser); follow = false " ng-show="follow">Prestani pratiti</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     <div class="row">
+        <div class="col-sm-8 col-md-8">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h3>Timeline</h3>
+
+                    <br />
+                    <br />
+                    <br />
+
+                    <div ng-repeat="item in allPosts3  |  orderBy:'+':true" track by $index>
+                        <div class="panel panel-primary">
+
+                            <div class="panel-heading">
+                                <span>
+                                    <img src="~/UploadedFiles/{{image}}" style="width:40px;height:40px; background: #FFFFFF;
+                                        margin: auto;
+                                        -moz-border-radius: 1px;
+                                        border-radius: 100px;
+                                        padding: 1px;
+                                        box-shadow: 0px 0px 20px #888;" />
+                                </span>
+                                by {{otherUser}}, {{item.CreatedAt | mydate | date: 'yyyy-MM-dd HH:mm'}}h
+                            </div>
+                            <div class="panel-body">
+                                {{item.PostDescription}}
+                                <br />
+                                <br />
+                                <br />
+                                <div class="panel-footer">
+                                    <button class="btn btn-primary" ng-click="likePost(item.Id)">Like <span class="badge">{{item.numOfLikes}}</span> </button>
+                                    <button class="btn btn-danger" ng-click="bljakPost(item.Id)">Bljak <span class="badge">{{item.numOfBljaks}}</span> </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h3>Prijatelji</h3>
+                    <ul ng-repeat="follower in followers">
+                        <li><a href="~/search/OtherUser?otherUserName={{follower.OtherUserId}}">{{follower.OtherUserId}}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
